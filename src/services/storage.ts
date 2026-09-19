@@ -925,6 +925,46 @@ export const DataService = {
   // Initialization
   init: () => initializeSampleData(false),
   resetToSampleData: () => initializeSampleData(true),
+  resetAllDataToZero: (options?: { resetInventoryStock?: boolean }): void => {
+    // 1. Clear all operational / transactional records to empty array (0 sales, 0 expenses, 0 orders)
+    setStorageData(STORAGE_KEYS.ORDERS, []);
+    setStorageData(STORAGE_KEYS.PURCHASES, []);
+    setStorageData(STORAGE_KEYS.EXPENSES, []);
+    setStorageData(STORAGE_KEYS.WASTAGE, []);
+    setStorageData(STORAGE_KEYS.PAYROLL, []);
+    setStorageData(STORAGE_KEYS.SUPPLIER_PAYMENTS, []);
+
+    // 2. Reset supplier balances to 0
+    const suppliers = getStorageData<Supplier[]>(STORAGE_KEYS.SUPPLIERS, []);
+    const zeroSuppliers = suppliers.map((s) => ({
+      ...s,
+      currentBalance: 0,
+      openingBalance: 0,
+    }));
+    setStorageData(STORAGE_KEYS.SUPPLIERS, zeroSuppliers);
+
+    // 3. Reset staff advance / deductions to 0
+    const staff = getStorageData<Staff[]>(STORAGE_KEYS.STAFF, []);
+    const resetStaff = staff.map((st) => ({
+      ...st,
+      advance: 0,
+      deduction: 0,
+    }));
+    setStorageData(STORAGE_KEYS.STAFF, resetStaff);
+
+    // 4. Optionally reset inventory stock quantities to 0
+    if (options?.resetInventoryStock) {
+      const inventory = getStorageData<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []);
+      const zeroInventory = inventory.map((inv) => ({
+        ...inv,
+        currentStock: 0,
+        purchasedQuantity: 0,
+        usedQuantity: 0,
+        wastedQuantity: 0,
+      }));
+      setStorageData(STORAGE_KEYS.INVENTORY, zeroInventory);
+    }
+  },
 
   // Auth & Session
   getCurrentSession: (): User | null => {

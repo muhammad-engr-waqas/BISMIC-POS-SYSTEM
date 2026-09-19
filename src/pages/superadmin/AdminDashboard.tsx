@@ -4,6 +4,8 @@ import { DateRangePicker } from '../../components/common/DateRangePicker';
 import { Select } from '../../components/common/Select';
 import { DateFilterType, calculateFinancialSummary } from '../../utils/calculations';
 import { formatSAR } from '../../utils/formatters';
+import { Button } from '../../components/common/Button';
+import { SystemRestartModal } from '../../components/common/SystemRestartModal';
 import {
   Store,
   CheckCircle2,
@@ -13,6 +15,7 @@ import {
   Trash2,
   Users,
   Wallet,
+  RotateCcw,
 } from 'lucide-react';
 
 export interface AdminDashboardProps {
@@ -25,6 +28,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
   const [customStart, setCustomStart] = useState('');
   const [customEnd, setCustomEnd] = useState('');
   const [selectedBranchId, setSelectedBranchId] = useState<string>('all');
+  const [showRestartModal, setShowRestartModal] = useState(false);
 
   const branches = DataService.getBranches();
   const allOrders = DataService.getOrders();
@@ -113,8 +117,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
           />
         </div>
 
-        <div className="text-right text-xs text-slate-500 font-medium">
-          Showing: <span className="font-bold text-slate-800 uppercase">{dateFilter.replace('_', ' ')}</span>
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="text-right text-xs text-slate-500 font-medium hidden md:block">
+            Showing: <span className="font-bold text-slate-800 uppercase">{dateFilter.replace('_', ' ')}</span>
+          </div>
+
+          <Button
+            variant="danger"
+            size="sm"
+            icon={RotateCcw}
+            onClick={() => setShowRestartModal(true)}
+            className="bg-red-600 hover:bg-red-700 text-white shadow-xs font-bold text-xs"
+          >
+            Restart (All Data 0) / ری اسٹارٹ
+          </Button>
         </div>
       </div>
 
@@ -241,6 +257,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = () => {
         </div>
       </div>
 
+      <SystemRestartModal
+        isOpen={showRestartModal}
+        onClose={() => setShowRestartModal(false)}
+      />
     </div>
   );
 };

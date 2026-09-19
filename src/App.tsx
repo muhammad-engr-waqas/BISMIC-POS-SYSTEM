@@ -28,7 +28,8 @@ import { BranchReportsPage } from './pages/branch/BranchReportsPage';
 import { BranchSettingsPage } from './pages/branch/BranchSettingsPage';
 
 // Quick Switcher Icons
-import { Store, ShieldCheck, UserCheck, ArrowRightLeft, Sparkles } from 'lucide-react';
+import { Store, ShieldCheck, UserCheck, ArrowRightLeft, Sparkles, RotateCcw } from 'lucide-react';
+import { SystemRestartModal } from './components/common/SystemRestartModal';
 
 const MainApp: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(() => DataService.getCurrentUser());
@@ -38,6 +39,7 @@ const MainApp: React.FC = () => {
   });
   const [adminTab, setAdminTab] = useState<AdminTab>('dashboard');
   const [branchTab, setBranchTab] = useState<BranchTab>('pos');
+  const [showRestartModal, setShowRestartModal] = useState(false);
   const toast = useToast();
 
   const branches = DataService.getBranches();
@@ -150,9 +152,25 @@ const MainApp: React.FC = () => {
                 Admin HQ
               </span>
             )}
+
+            {/* Restart & Reset All Data to 0 Button */}
+            <button
+              onClick={() => setShowRestartModal(true)}
+              className="ml-2 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-red-600/90 hover:bg-red-600 text-white shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-1.5 border border-red-500/40"
+              title="Restart System & Reset All Data to 0 / سسٹم ری اسٹارٹ"
+            >
+              <RotateCcw className="w-3 h-3" />
+              <span>Restart (Data 0) / ری اسٹارٹ</span>
+            </button>
           </div>
         </header>
       )}
+
+      {/* System Restart Modal */}
+      <SystemRestartModal
+        isOpen={showRestartModal}
+        onClose={() => setShowRestartModal(false)}
+      />
 
       {/* RENDER SUPER ADMIN OR BRANCH PORTAL */}
       <div className="flex-1 flex flex-col">
