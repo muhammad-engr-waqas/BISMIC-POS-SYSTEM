@@ -1,0 +1,6 @@
+{
+  "name": "Bismic Restaurant POS & Multi-Branch System",
+  "description": "Bismic Restaurant Point of Sale & Multi-Branch Management System with ZATCA Phase 2 E-Invoicing, Pakistani & Saudi Cuisine, and Urdu localization",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
